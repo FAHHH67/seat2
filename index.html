@@ -1,0 +1,223 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Seat goat</title>
+
+<style>
+
+body{
+margin:0;
+background:#e9e9e9;
+font-family:sans-serif;
+display:flex;
+height:100vh;
+align-items:center;
+justify-content:center;
+}
+
+#layout{
+display:flex;
+gap:40px;
+align-items:center;
+}
+
+#seatArea{
+width:1600px;
+height:1000px;
+background:white;
+border:3px solid black;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
+position:relative;
+overflow:hidden;
+}
+
+#panel{
+width:220px;
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+#panel button{
+width:100%;
+margin-top:10px;
+padding:8px;
+}
+
+#panel input{
+width:100%;
+margin-top:6px;
+margin-bottom:6px;
+padding:7px;
+}
+
+.circle{
+position:absolute;
+width:70px;
+height:70px;
+border:3px solid black;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+font-weight:bold;
+background:white;
+cursor:pointer;
+transition:opacity 0.3s;
+}
+
+.face{
+position:absolute;
+width:180px;
+pointer-events:none;
+animation:pop 0.4s ease;
+}
+
+@keyframes pop{
+0%{transform:scale(0)}
+100%{transform:scale(1)}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="layout">
+
+<div id="seatArea"></div>
+
+<div id="panel">
+
+<div>맞춤 설정</div>
+<input id="numbers" placeholder="예: 1-5,8,11-13">
+
+<button onclick="undo()">되돌리기</button>
+<button onclick="startSeat()">☠️</button>
+<button onclick="resetAll()">초기화</button>
+
+</div>
+
+</div>
+
+<script>
+
+let area=document.getElementById("seatArea")
+let circles=[]
+let createNumber=1
+const circleSize=70
+
+area.addEventListener("click",function(e){
+
+if(e.target.classList.contains("circle")) return
+
+let rect=area.getBoundingClientRect()
+
+let x=e.clientX-rect.left
+let y=e.clientY-rect.top
+
+x=Math.max(circleSize/2,Math.min(rect.width-circleSize/2,x))
+y=Math.max(circleSize/2,Math.min(rect.height-circleSize/2,y))
+
+let circle=document.createElement("div")
+
+circle.className="circle"
+circle.innerText=createNumber
+
+circle.style.left=(x-circleSize/2)+"px"
+circle.style.top=(y-circleSize/2)+"px"
+
+circle.addEventListener("click",function(event){
+event.stopPropagation()
+})
+
+area.appendChild(circle)
+
+circles.push(circle)
+
+createNumber++
+
+})
+
+function undo(){
+
+let last=circles.pop()
+
+if(last){
+last.remove()
+createNumber--
+}
+
+}
+
+function parseNumbers(input){
+
+let result=[]
+let parts=input.split(",")
+
+parts.forEach(p=>{
+
+p=p.trim()
+
+if(p.includes("-")){
+
+let [a,b]=p.split("-").map(Number)
+
+for(let i=a;i<=b;i++){
+result.push(i)
+}
+
+}else{
+
+let n=parseInt(p)
+if(!isNaN(n)) result.push(n)
+
+}
+
+})
+
+return result
+
+}
+
+function shuffleNumbers(){
+
+let text=document.getElementById("numbers").value
+
+let numbers=parseNumbers(text)
+
+numbers.sort(()=>Math.random()-0.5)
+
+circles.forEach((c,i)=>{
+
+if(numbers[i]!==undefined){
+c.innerText=numbers[i]
+}else{
+c.innerText=""
+}
+
+})
+
+}
+
+function startSeat(){
+
+shuffleNumbers()
+
+// 자리 흐리게
+circles.forEach(c=>{
+c.style.opacity="0.3"
+})
+
+// 이미지 등장
+let images=["2.png","3.png","9.png"]
+
+for(let i=0;i<6;i++){
+
+let img=document.createElement("img")
+```
