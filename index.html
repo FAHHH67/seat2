@@ -24,12 +24,13 @@ align-items:center;
 }
 
 #seatArea{
-width:1600px;
-height:1000px;
+width:1800px;
+height:1100px;
 background:white;
 border:3px solid black;
 border-radius:12px;
 position:relative;
+cursor:pointer;
 }
 
 #panel{
@@ -44,7 +45,7 @@ box-shadow:0 5px 15px rgba(0,0,0,0.1);
 width:100%;
 margin-top:10px;
 padding:10px;
-font-size:16px;
+font-size:18px;
 cursor:pointer;
 }
 
@@ -72,15 +73,24 @@ cursor:pointer;
 
 #skullBtn{
 position:relative;
+height:60px;
+font-size:28px;
 overflow:hidden;
+}
+
+#skullText{
+transition:opacity 0.4s;
 }
 
 #skullImg{
 position:absolute;
-top:-120px;
-left:50%;
-transform:translateX(-50%);
-width:120px;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:contain;
+opacity:0;
+transition:opacity 0.5s;
 pointer-events:none;
 }
 
@@ -101,7 +111,7 @@ pointer-events:none;
 <button onclick="undo()">되돌리기</button>
 
 <button id="skullBtn" onclick="startSeat()">
-☠️
+<span id="skullText">☠️</span>
 <img id="skullImg">
 </button>
 
@@ -117,7 +127,9 @@ let area=document.getElementById("seatArea")
 let circles=[]
 let createNumber=1
 
-area.addEventListener("click",(e)=>{
+area.addEventListener("click",function(e){
+
+if(e.target.classList.contains("circle")) return
 
 let rect=area.getBoundingClientRect()
 
@@ -132,7 +144,9 @@ circle.innerText=createNumber
 circle.style.left=(x-35)+"px"
 circle.style.top=(y-35)+"px"
 
-circle.onclick=(ev)=>ev.stopPropagation()
+circle.onclick=function(ev){
+ev.stopPropagation()
+}
 
 area.appendChild(circle)
 
@@ -195,8 +209,6 @@ circles.forEach((c,i)=>{
 
 if(numbers[i]!==undefined){
 c.innerText=numbers[i]
-}else{
-c.innerText=""
 }
 
 })
@@ -212,14 +224,17 @@ let imgs=["2.png","3.png","9.png"]
 let random=imgs[Math.floor(Math.random()*imgs.length)]
 
 let img=document.getElementById("skullImg")
+let skull=document.getElementById("skullText")
 
 img.src=random
 
-img.style.display="block"
+skull.style.opacity=0
+img.style.opacity=1
 
 setTimeout(()=>{
-img.style.display="none"
-},1500)
+img.style.opacity=0
+skull.style.opacity=1
+},2000)
 
 }
 
@@ -228,7 +243,6 @@ function resetAll(){
 circles.forEach(c=>c.remove())
 
 circles=[]
-
 createNumber=1
 
 }
@@ -237,4 +251,3 @@ createNumber=1
 
 </body>
 </html>
-```
