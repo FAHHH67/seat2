@@ -88,6 +88,25 @@ z-index: 10;
 user-select: none;
 }
 
+/* 9.png 효과 이미지 스타일 */
+#effectImage {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+object-fit: cover;
+z-index: 20;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.8s ease-out;
+}
+
+/* 페이드아웃 실행 클래스 */
+#effectImage.show {
+opacity: 1;
+}
+
 </style>
 </head>
 
@@ -97,6 +116,7 @@ user-select: none;
 
 <div id="seatArea">
   <div id="countdownOverlay">3</div>
+  <img id="effectImage" src="9.png" alt="효과 이미지">
 </div>
 
 <div id="panel">
@@ -117,6 +137,7 @@ user-select: none;
 let area=document.getElementById("seatArea")
 let overlay=document.getElementById("countdownOverlay")
 let shuffleBtn=document.getElementById("shuffleBtn")
+let effectImg=document.getElementById("effectImage")
 let circles=[]
 let createNumber=1
 const circleSize=70
@@ -195,7 +216,7 @@ return result
 
 }
 
-// 3초 카운트다운 함수
+// 3초 카운트다운 및 이미지 애니메이션 함수
 function startCountdown(){
 
 if(isShuffling || circles.length === 0) return
@@ -214,9 +235,18 @@ let timer = setInterval(() => {
     } else {
         clearInterval(timer)
         overlay.style.display = "none"
+        
+        // 자리 섞기
         shuffleNumbers()
-        isShuffling = false
-        shuffleBtn.disabled = false
+
+        // 9.png 이미지 등장 및 페이드아웃 효과 실행
+        effectImg.classList.add("show")
+
+        setTimeout(() => {
+            effectImg.classList.remove("show")
+            isShuffling = false
+            shuffleBtn.disabled = false
+        }, 800) // 0.8초 동안 보여진 후 서서히 사라짐
     }
 }, 1000)
 
