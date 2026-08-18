@@ -88,18 +88,19 @@ z-index: 10;
 user-select: none;
 }
 
-/* 9.png 효과 이미지 스타일 */
+/* 9.png 효과 이미지 스타일 (숫자 120px의 1.5배인 180px 크기) */
 #effectImage {
 position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-object-fit: cover;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 180px;
+height: 180px;
+object-fit: contain;
 z-index: 20;
 opacity: 0;
 pointer-events: none;
-transition: opacity 0.8s ease-out;
+transition: opacity 0.3s ease-out;
 }
 
 /* 페이드아웃 실행 클래스 */
@@ -216,7 +217,7 @@ return result
 
 }
 
-// 3초 카운트다운 및 이미지 애니메이션 함수
+// 3초 카운트다운 및 이미지 효과 함수
 function startCountdown(){
 
 if(isShuffling || circles.length === 0) return
@@ -239,14 +240,16 @@ let timer = setInterval(() => {
         // 자리 섞기
         shuffleNumbers()
 
-        // 9.png 이미지 등장 및 페이드아웃 효과 실행
+        // 9.png 순간 등장 후 빠르게 사라짐
         effectImg.classList.add("show")
 
         setTimeout(() => {
             effectImg.classList.remove("show")
-            isShuffling = false
-            shuffleBtn.disabled = false
-        }, 800) // 0.8초 동안 보여진 후 서서히 사라짐
+            setTimeout(() => {
+                isShuffling = false
+                shuffleBtn.disabled = false
+            }, 300)
+        }, 150) // 0.15초만 보여주고 바로 사라짐
     }
 }, 1000)
 
